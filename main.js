@@ -225,13 +225,24 @@
     updateList('freeRoam');
     updateList('role');
   }
+  
+  function notify(event) { 
+    if (Notification) {
+      if (window.lastNotificationEventId !== event.id && event.eta < (1000 * 60 * 2)) {
+        window.lastNotificationEventId = event.id      
+        Notification.requestPermission().then(() => {
+          new Notification(event.name, {body: event.etaText, tag: 'rdr2-free-roam-event-schedule'})
+        })
+      }
+    }
+  }
 
   // Initialise
   showTimeZone();
   update();
 
-  // Update event list every 10 seconds
-  window.setInterval(update, 10000);
+  // Update event list every 5 seconds
+  window.setInterval(update, 5000);
 })();
 
 //--- Theme switcher ---//
