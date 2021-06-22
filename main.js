@@ -228,12 +228,10 @@
   }
   
   function notify(event) { 
-    if (Notification) {
+    if (Notification && Notification.permission === 'granted') {      
       if (window.lastNotificationEventId !== event.id && event.eta < (1000 * 60 * 2)) {
-        window.lastNotificationEventId = event.id
-        Notification.requestPermission().then(() => {
-          new Notification(event.name, {body: event.etaText, tag: 'rdr2-free-roam-event-schedule'})
-        })
+        window.lastNotificationEventId = event.id        
+        new Notification(event.name, {body: event.etaText, tag: 'rdr2-free-roam-event-schedule'})
       }
     }
   }
@@ -304,4 +302,23 @@
     localStorage.setItem(localStorageKey, showNews);
     event.preventDefault();
   });
+})();
+
+//--- Toggle notifications ---//
+(function() {  
+  if (Notification) {
+    var button = document.querySelector('#notify');
+
+    if (button) {
+
+      // Toggle notifications on button click
+      button.addEventListener('click', function() {    
+        Notification.requestPermission().then(function (permission) {          
+          if (permission === 'granted') {
+            new Notification('RDO Events', {body: 'Notifications enabled', tag: 'rdr2-free-roam-event-schedule'})
+          }
+        });
+      });
+    }
+  }
 })();
