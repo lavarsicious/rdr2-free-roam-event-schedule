@@ -50,6 +50,7 @@
           el.nextEventName.innerHTML = event.name;
           el.nextEventTime.innerHTML = event.timeString;
           el.nextEventEta.innerHTML = event.etaText;
+          notify(event);
         }
         li.append(getAnchor(key.toLowerCase() + event.id));
         var text = document.createElement('span');
@@ -229,7 +230,7 @@
   function notify(event) { 
     if (Notification) {
       if (window.lastNotificationEventId !== event.id && event.eta < (1000 * 60 * 2)) {
-        window.lastNotificationEventId = event.id      
+        window.lastNotificationEventId = event.id
         Notification.requestPermission().then(() => {
           new Notification(event.name, {body: event.etaText, tag: 'rdr2-free-roam-event-schedule'})
         })
